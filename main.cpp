@@ -18,7 +18,8 @@ struct Ertek{
 public:
     int a; //ertekek
     bool b; // igaz hamis
-
+    int szigetek; //szigetek a szinezos megoldassa
+    int tengerszemek; //tengerszemek a szinezos megoldassa
 
 
 
@@ -29,11 +30,14 @@ struct Kep{
 private:
 
 int szelesseg,magassag;
-vector<vector<Ertek>> v;
-string _fajlnev;
 
+string _fajlnev;
+int szszam = 0; //szigetek szama
 
 public:
+
+vector<vector<Ertek>> v;
+
 
 Kep(string fajlnev):_fajlnev(fajlnev){
 
@@ -46,16 +50,24 @@ ifstream befajl(_fajlnev);
 
 befajl >> szelesseg;
 
-cout << szelesseg << endl;
+
 
 befajl >> magassag;
 
+cout << szelesseg  << "  "  << magassag << endl;
+
 v = vector<vector<Ertek>> (magassag,vector<Ertek>(szelesseg));
+
+
 
 for(int i = 0 ; i< magassag;i++){
     for(int j = 0; j < szelesseg;j++){
 
         befajl >> v[i][j].a;
+
+
+
+
          //cout << v[i][j].a <<endl;
 
     }
@@ -74,6 +86,127 @@ cout << "terkep sikeresen beolvasva" << endl;
 
 }
 
+bool sziget(int ex, int ey)
+    {
+        return v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b;
+    }
+    void szigetkereso(int ex, int ey)
+    {
+        bool valtozott;
+
+
+
+        if (v[ex][ey].a >= 0 && v[ex][ey].b == false ){
+            v[ex][ey].b = true;
+            do
+            {
+                valtozott = false;
+
+                for (size_t i=0; i<v.size(); i++)
+                {
+                    for (size_t j=0; j<v[i].size(); j++)
+                    {
+                        if (v[i][j].b >= 0 and
+                            sziget(i, j) and
+                            !v[i][j].a)
+                        {
+                            v[i][j].a = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (size_t i=0; i<v.size(); i++)
+                {
+                    for (int j=v[i].size()-1; j>=0; j--)
+                    {
+                        if (v[i][j].a >= 0 and
+                            sziget(i, j) and
+                            !v[i][j].b)
+                        {
+                            v[i][j].b = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (int i=v.size()-1; i>=0; i--)
+                {
+                    for (size_t j=0; j<v[i].size(); j++)
+                    {
+                        if (v[i][j].a >= 0 and
+                            sziget(i, j) and
+                            !v[i][j].b)
+                        {
+                            v[i][j].b = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (int i=v.size()-1; i>=0; i--)
+                {
+                    for (int j=v[i].size()-1; j>=0; j--)
+                    {
+                        if (v[i][j].a >= 0 and
+                            sziget(i, j) and
+                            !v[i][j].b)
+                        {
+                            v[i][j].b = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+
+            }
+            while (valtozott);
+
+
+                /*
+            for (size_t i=0; i<sz.size(); i++){
+                    for (size_t j=0; j<sz[i].size(); j++){
+                        cout << szines[i][j] << "    ";
+                    }
+                    }
+                */
+
+            //itt mar beszinezi jol
+                szszam = szszam + 1;
+               // cout << szszam <<endl;
+               for (size_t i=0; i<v.size(); i++){
+                    for (size_t j=0; j<v[i].size(); j++){
+                        v[i][j].szigetek = v[i][j].szigetek + v[i][j].b;
+
+                        //memoriaszemet van meg a vektorokban, 0 val kellene kezdeni oket
+                        if(v[i][j].szigetek > 146){
+                            //cout << v[i][j].szigetek <<"  ";
+                            cout << szszam <<"  " << v[i][j].b*szszam <<endl;
+                        }
+                        //memoriaszemet van meg a vektorokban, 0 val kellene kezdeni oket
+
+                        //cout << v[i][j].szigetek <<"  ";
+
+
+                    }
+                }
+
+
+        /*
+        for (size_t i=0; i<sz.size(); i++){
+                    for (size_t j=0; j<sz[i].size(); j++){
+                        cout << szines[i][j] <<" ";
+                    }
+        }
+        cout << "egylefutas" <<endl;
+            */
+        }
+        //cout << "tefutott" <<endl;
+
+
+
+}
+
+
+
+
+
 
 //rajz
 void rajz(){
@@ -89,8 +222,13 @@ for(int y = 0 ; y< v.size();y++){
             gout << move_to(x,y) << color(0,200,255) << dot;
         }
 
+        if (v[y][x].b){
+             gout << move_to(x,y) << color(v[y][x].szigetek*100, v[y][x].szigetek+100, v[y][x].szigetek-100) << dot;
+             //cout << v[y][x].szigetek <<endl;
 
-        if(v[y][x].a > 0){
+        }
+
+        else if(v[y][x].a > 0){
 
             int pillmagassag = v[y][x].a;
 
@@ -133,8 +271,8 @@ for(int y = 0 ; y< v.size();y++){
 void rajzM(int ex, int ey){
 
 
-for(int y = 0 ; y< v.size();y++){
-for(int x = 0; x < v[y].size();x++){
+for(size_t y = 0 ; y< v.size();y++){
+for(size_t x = 0; x < v[y].size();x++){
 
 //v [magassag][szelesseg]
 gout << move_to(AblakSz()+x,v[ey][x].a + AblakM()/2) << color(0,200,255) << dot;
@@ -168,13 +306,33 @@ int main()
 
     kep.olvas();
 
-    gout.open(kep.AblakSz(),kep.AblakM());
 
+    //megkeresi a szigeteket
+
+    for (int i=0; i<kep.AblakM(); i++){
+    for (int j=0; j<kep.AblakSz(); j++){
+    kep.szigetkereso(i,j);
+    }
+    }
+    //cout << kep.szszam <<endl;
+    /*
+    for (int i=0; i<kep.AblakM(); i++){
+    for (int j=0; j<kep.AblakSz(); j++){
+    cout << kep.v[i][j].szigetek << "   ";
+    }
+    }
+    */
+
+    gout.open(kep.AblakSz(),kep.AblakM());
+    gin.timer(30);
     while(gin >> ev && ev.keycode != key_escape){
 
+    if(ev.type == ev_timer){
+        kep.rajz();
+        //kep.rajzM(ev.pos_x,ev.pos_y);
 
-    kep.rajz();
-    //kep.rajzM(ev.pos_x,ev.pos_y);
+    }
+
 
 
 
