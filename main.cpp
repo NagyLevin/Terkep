@@ -407,12 +407,20 @@ return magassag;
 }
 //ablak
 
+void xrajz(int ex,int ey){
+
+gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(-5,-5) << move_to(ex,ey) << line(-5,5) << move_to(ex,ey) << line(5,-5);
+
+}
+
+
+
 };
 
 
 
 
-int main()
+int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 {
     Kep kep("terkep.txt");
 
@@ -442,6 +450,14 @@ int main()
     }
     */
 
+    bool utkereses = false;
+    bool vizonto = false;
+    bool hibepito = false;
+
+    int kattintasszam = 0;
+
+    int markx,marky;
+
     gout.open(kep.AblakSz(),kep.AblakM());
     gin.timer(30);
     while(gin >> ev && ev.keycode != key_escape){
@@ -450,10 +466,48 @@ int main()
         kep.rajz();
         //kep.rajzM(ev.pos_x,ev.pos_y);
 
+
+        if(kattintasszam > 0){
+            kep.xrajz(markx,marky);
+        }
+
     }
 
 
 
+    if(ev.type == ev_key){
+        if(ev.keycode == 'u'){
+            //cout << "this is the way" <<endl;
+            utkereses = true;
+            cout << "Utkereses aktiv nyomj egy jobbklicket az idnitashoz" <<endl;
+        }
+
+
+
+
+    }
+
+    if(ev.type == ev_mouse){
+
+        if(ev.button == btn_left && utkereses){
+
+            kattintasszam = kattintasszam + 1;
+
+            markx = ev.pos_x;
+            marky = ev.pos_y;
+
+            if(kattintasszam >= 2){
+                cout << "a legrovidebb ut 0" <<endl;
+
+            }
+
+
+
+        }
+
+
+
+    }
 
 
 
