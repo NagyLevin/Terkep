@@ -17,7 +17,11 @@ struct Ertek{
 
 public:
     int a; //ertekek
+
     bool b; // igaz hamis
+    bool bt; // igaz hamis
+
+
     int szigetek; //szigetek a szinezos megoldassa
     int tengerszemek; //tengerszemek a szinezos megoldassa
 
@@ -33,6 +37,8 @@ int szelesseg,magassag;
 
 string _fajlnev;
 int szszam = 0; //szigetek szama
+int tszam = 0;
+
 
 public:
 
@@ -90,11 +96,16 @@ bool sziget(int ex, int ey)
     {
         return v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b;
     }
+bool tszem(int ex, int ey)
+    {
+        return v[(ex+1) % v.size()][ey].bt || v[(ex-1+v.size()) % v.size()][ey].bt || v[ex][(ey+1) % v[ex].size()].bt || v[ex][(ey-1+v[ex].size()) % v[ex].size()].bt;
+    }
+
     void szigetkereso(int ex, int ey)
     {
         bool valtozott;
 
-
+        //szigetkereses
 
         if (v[ex][ey].a >= 0 && v[ex][ey].b == false ){
             v[ex][ey].b = true;
@@ -106,11 +117,11 @@ bool sziget(int ex, int ey)
                 {
                     for (size_t j=0; j<v[i].size(); j++)
                     {
-                        if (v[i][j].b >= 0 and
+                        if (v[i][j].a >= 0 and
                             sziget(i, j) and
-                            !v[i][j].a)
+                            !v[i][j].b)
                         {
-                            v[i][j].a = true;
+                            v[i][j].b = true;
                             valtozott = true;
                         }
                     }
@@ -197,7 +208,106 @@ bool sziget(int ex, int ey)
         cout << "egylefutas" <<endl;
             */
         }
+
+        //szigetkereses
+
+        if (v[ex][ey].a <= 0 && v[ex][ey].bt == false ){
+            v[ex][ey].bt = true;
+            do
+            {
+                valtozott = false;
+
+                for (size_t i=0; i<v.size(); i++)
+                {
+                    for (size_t j=0; j<v[i].size(); j++)
+                    {
+                        if (v[i][j].a <= 0 and
+                            tszem(i, j) and
+                            !v[i][j].bt)
+                        {
+                            v[i][j].bt = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (size_t i=0; i<v.size(); i++)
+                {
+                    for (int j=v[i].size()-1; j>=0; j--)
+                    {
+                        if (v[i][j].a <= 0 and
+                            tszem(i, j) and
+                            !v[i][j].bt)
+                        {
+                            v[i][j].bt = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (int i=v.size()-1; i>=0; i--)
+                {
+                    for (size_t j=0; j<v[i].size(); j++)
+                    {
+                        if (v[i][j].a <= 0 and
+                            tszem(i, j) and
+                            !v[i][j].bt)
+                        {
+                            v[i][j].bt = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+                for (int i=v.size()-1; i>=0; i--)
+                {
+                    for (int j=v[i].size()-1; j>=0; j--)
+                    {
+                        if (v[i][j].a <= 0 and
+                            tszem(i, j) and
+                            !v[i][j].bt)
+                        {
+                            v[i][j].bt = true;
+                            valtozott = true;
+                        }
+                    }
+                }
+
+            }
+            while (valtozott);
+
+
+                /*
+            for (size_t i=0; i<sz.size(); i++){
+                    for (size_t j=0; j<sz[i].size(); j++){
+                        cout << szines[i][j] << "    ";
+                    }
+                    }
+                */
+
+            //itt mar beszinezi jol
+                tszam = tszam + 1;
+                //cout << tszam <<endl;
+               for (size_t i=0; i<v.size(); i++){
+                    for (size_t j=0; j<v[i].size(); j++){
+                        v[i][j].tengerszemek = v[i][j].tengerszemek + v[i][j].bt;
+
+
+                        //cout << v[i][j].szigetek <<"  ";
+
+
+                    }
+                }
+
+
+        /*
+        for (size_t i=0; i<sz.size(); i++){
+                    for (size_t j=0; j<sz[i].size(); j++){
+                        cout << szines[i][j] <<" ";
+                    }
+        }
+        cout << "egylefutas" <<endl;
+            */
+        }
         //cout << "tefutott" <<endl;
+
 
 
 
@@ -217,7 +327,13 @@ for(int y = 0 ; y< v.size();y++){
 
 
 
-        if(v[y][x].a < 0){
+        if (v[y][x].bt){
+             gout << move_to(x,y) << color(v[y][x].tengerszemek*100, v[y][x].tengerszemek+100, v[y][x].tengerszemek-100) << dot;
+
+
+        }
+
+        else if(v[y][x].a <= 0){
 
             gout << move_to(x,y) << color(0,200,255) << dot;
         }
@@ -314,6 +430,9 @@ int main()
     kep.szigetkereso(i,j);
     }
     }
+//    cout << "tefutott" <<endl;
+
+
     //cout << kep.szszam <<endl;
     /*
     for (int i=0; i<kep.AblakM(); i++){
