@@ -20,7 +20,7 @@ public:
 
     bool b; // igaz hamis
     bool bt; // igaz hamis
-
+    bool block;
 
     int szigetek; //szigetek a szinezos megoldassa
     int tengerszemek; //tengerszemek a szinezos megoldassa
@@ -328,7 +328,7 @@ for(int y = 0 ; y< v.size();y++){
 
 
         if (v[y][x].bt){
-             gout << move_to(x,y) << color(v[y][x].tengerszemek*100, v[y][x].tengerszemek+100, v[y][x].tengerszemek-100) << dot;
+             gout << move_to(x,y) << color(0, 0, v[y][x].tengerszemek+100) << dot;
 
 
         }
@@ -339,7 +339,7 @@ for(int y = 0 ; y< v.size();y++){
         }
 
         if (v[y][x].b){
-             gout << move_to(x,y) << color(v[y][x].szigetek*100, v[y][x].szigetek+100, v[y][x].szigetek-100) << dot;
+             gout << move_to(x,y) << color(v[y][x].szigetek*100, v[y][x].szigetek+100, 0) << dot;
              //cout << v[y][x].szigetek <<endl;
 
         }
@@ -414,6 +414,162 @@ gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(
 }
 
 
+void utkereso(int m1x, int m1y, int m2x, int m2y){
+
+        if(v[m1y][m1x].a<= 0 || v[m2y][m2x].a <= 0){
+
+            //cout << "eger koordinatok  " << m1x << ":" << m1y << "     " << m2x <<":" << m2y <<endl;
+            cout << "ez egyik pont vizben van " << v[m1y][m1x].a << "  " << v[m2y][m2x].a<<endl;
+
+        }
+
+        else if(v[m1y][m1x].szigetek !=  v[m2y][m2x].szigetek){
+
+
+            cout << "nincs ut a ket pont kozott" <<endl;
+
+        }
+
+
+        if(v[m1y][m1x].szigetek ==  v[m2y][m2x].szigetek){
+            vector<int> utx;
+            vector<int> uty;
+            int uthossz = 0;
+            int blockolasok = 0;
+            int blockszam =0;
+
+
+            while(m1y != m2y || m1x != m2x){
+
+             blockolasok = blockolasok +1;
+            if (m1x +1 < v[0].size() && m1x < m2x && v[m1y][m1x+1].b != false && v[m1y][m1x+1].block != true ){ //X+1
+                m1x =  m1x+1;
+
+
+                utx.push_back(m1x);
+                uty.push_back(m1y);
+                v[m1y][m1x].block = true;
+
+
+            }
+            else if(m1y +1< v.size() && m1y < m2y && v[m1y+1][m1x].b != false && v[m1y+1][m1x].block != true){ //Y+1
+                m1y = m1y+1;
+                utx.push_back(m1x);
+                uty.push_back(m1y);
+                v[m1y][m1x].block = true;
+
+            }
+            else if(m1x -1 > -1 && m1x > m2x && v[m1y][m1x-1].b != false && v[m1y][m1x-1].block != true){ //X-1
+                m1x = m1x-1;
+                 utx.push_back(m1x);
+                uty.push_back(m1y);
+                 v[m1y][m1x].block = true;
+
+            }
+            else if(m1y-1>-1 && m1y > m2y && v[m1y-1][m1x].b != false && v[m1y-1][m1x].block != true){ //Y-1
+                m1y = m1y-1;
+                 utx.push_back(m1x);
+                uty.push_back(m1y);
+                 v[m1y][m1x].block = true;
+
+            }
+            else if(m1x -1 > -1 && m1y-1>-1 &&v[m1y-1][m1x-1].b != false &&v[m1y-1][m1x-1].block != true){ //XY-1
+               m1x = m1x-1;
+                m1y = m1y-1;
+                utx.push_back(m1x);
+                uty.push_back(m1y);
+                v[m1y][m1x].block = true;
+
+            }
+            else if(m1x +1<v[0].size() && m1y +1<v.size() && v[m1y+1][m1x+1].b != false && v[m1y+1][m1x+1].block != true){ //XY+1
+                m1x = m1x+1;
+                m1y = m1y+1;
+                utx.push_back(m1x);
+                uty.push_back(m1y);
+                 v[m1y][m1x].block = true;
+
+            }
+            else if(m1y +1<v.size() && m1x -1 > -1 && v[m1y+1][m1x-1].b != false && v[m1y+1][m1x-1].block != true){ //X-1Y+1
+                m1x = m1x-1;
+                m1y = m1y+1;
+                 utx.push_back(m1x);
+                uty.push_back(m1y);
+                v[m1y][m1x].block = true;
+
+            }
+            else if(m1x +1<v[0].size() && m1y-1>-1 && v[m1y-1][m1x+1].b != false && v[m1y-1][m1x+1].block != true){ //X+1 Y-1
+             m1x = m1x+1;
+             m1y = m1y-1;
+              utx.push_back(m1x);
+              uty.push_back(m1y);
+              v[m1y][m1x].block = true;
+
+            }
+            else{ //ha valahogy beakad
+
+                if(utx.size() > 0){
+                utx.pop_back();
+                uty.pop_back();
+                m1x = utx[utx.size()];
+                m1y = uty[uty.size()];
+                }
+
+                //a mar bejart utat blokkolni kellene
+
+            }
+            /*
+            if(blockolasok > v.size()-1){
+                cout << "van ilyen eset?" <<endl;
+                for (int i=0; i<v.size(); i++){
+                for (int j=0; j<v[i].size(); j++){
+                    if(v[i][j].block == true){
+                        v[i][j].block == false;
+                    }
+
+                }
+                }
+                blockolasok = 0;
+
+            }
+            */
+            cout << blockolasok <<endl;
+            if(blockolasok > v[0].size()*v.size()/10){
+
+                cout << "feladom "<<endl;
+                m1x = m2x;
+                m1y = m2y;
+
+            }
+
+            //neha beakad mert tul sok teruletet blockol, esetleg probalj meg a masik iranybol is elindulni?
+
+
+                //cout << v.size() <<endl; //az y a 300;
+                cout << m1x << ":" << m1y <<"         " << m2x << ":" << m2y <<endl;
+                gout << move_to(m1x,m1y) << color(255,0,0) << dot << refresh;
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+
+
+        }
+
+
+}
+
+
 
 };
 
@@ -450,13 +606,15 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
     }
     */
 
+
+    bool melymagas = false;
     bool utkereses = false;
     bool vizonto = false;
     bool hibepito = false;
 
     int kattintasszam = 0;
 
-    int markx,marky;
+    int mark1x,mark1y,mark2x,mark2y;
 
     gout.open(kep.AblakSz(),kep.AblakM());
     gin.timer(30);
@@ -468,7 +626,7 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
 
         if(kattintasszam > 0){
-            kep.xrajz(markx,marky);
+            kep.xrajz(mark1x,mark1y);
         }
 
     }
@@ -477,33 +635,92 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
     if(ev.type == ev_key){
         if(ev.keycode == 'u'){
+
+            kattintasszam = 0;
+                mark1x =0;
+                mark1y =0;
+                mark2x =0;
+                mark2y =0;
             //cout << "this is the way" <<endl;
             utkereses = true;
             cout << "Utkereses aktiv nyomj egy jobbklicket az idnitashoz" <<endl;
         }
 
+        if(ev.keycode == 'v'){
 
+            kattintasszam = 0;
+                mark1x =0;
+                mark1y =0;
+                mark2x =0;
+                mark2y =0;
+            //cout << "this is the way" <<endl;
+            vizonto = true;
+            cout << "Vizonto bekapcsolva kattints vizre" <<endl;
+        }
 
 
     }
 
+    //1 feladat ut
     if(ev.type == ev_mouse){
 
         if(ev.button == btn_left && utkereses){
 
             kattintasszam = kattintasszam + 1;
 
-            markx = ev.pos_x;
-            marky = ev.pos_y;
+            if(kattintasszam == 1){
+            mark1x = ev.pos_x;
+            mark1y = ev.pos_y;
 
-            if(kattintasszam >= 2){
-                cout << "a legrovidebb ut 0" <<endl;
+            }
+
+            if(kattintasszam == 2){
+
+                mark2x = ev.pos_x;
+                mark2y = ev.pos_y;
+                kep.utkereso(mark1x,mark1y,mark2x,mark2y);
+                kattintasszam = 0;
+                mark1x =0;
+                mark1y =0;
+                mark2x =0;
+                mark2y =0;
+
 
             }
 
 
 
         }
+
+        //2 feladat vizonto
+        if(ev.button == btn_left && vizonto){
+
+            kattintasszam = kattintasszam + 1;
+
+            if(kattintasszam == 1){
+            mark1x = ev.pos_x;
+            mark1y = ev.pos_y;
+
+            }
+
+            if(kattintasszam == 2){
+
+                mark2x = ev.pos_x;
+                mark2y = ev.pos_y;
+
+                kattintasszam = 0;
+                mark1x =0;
+                mark1y =0;
+                mark2x =0;
+                mark2y =0;
+
+
+            }
+
+
+
+        }
+
 
 
 
