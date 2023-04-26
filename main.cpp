@@ -96,7 +96,8 @@ cout << "terkep sikeresen beolvasva" << endl;
 
 bool sziget(int ex, int ey)
     {
-        return v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b;
+        return v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b ||
+         v[(ex+1) % v.size()][(ey+1) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey-1+v[ex].size()) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey+1) % v[ex].size()].b || v[(ex+1) % v.size()][(ey-1+v[ex].size())% v[ex].size()].b;
     }
 bool tszem(int ex, int ey)
     {
