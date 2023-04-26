@@ -39,6 +39,8 @@ string _fajlnev;
 int szszam = 0; //szigetek szama
 int tszam = 0;
 
+vector<int> utx;
+vector<int> uty;
 
 public:
 
@@ -322,8 +324,8 @@ bool tszem(int ex, int ey)
 void rajz(){
 int voltmagassag = 0;
 
-for(int y = 0 ; y< v.size();y++){
-    for(int x = 0; x < v[y].size();x++){
+for(size_t y = 0 ; y< v.size();y++){
+    for(size_t x = 0; x < v[y].size();x++){
 
 
 
@@ -416,8 +418,6 @@ gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(
 
 void utkereso(int m1x, int m1y, int m2x, int m2y){
 
-
-
         if(v[m1y][m1x].a<= 0 || v[m2y][m2x].a <= 0){
 
             //cout << "eger koordinatok  " << m1x << ":" << m1y << "     " << m2x <<":" << m2y <<endl;
@@ -433,24 +433,39 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
         }
 
 
-
         if(v[m1y][m1x].szigetek ==  v[m2y][m2x].szigetek){
-            vector<int> utx;
-            vector<int> uty;
-            int osux = m1x;
-            int osuy = m1y;
+
+
+
+
+            int szigetid = v[m1y][m1x].szigetek;
+
+            utx.clear();
+            uty.clear();
+
+            utx.push_back(m1x);
+            uty.push_back(m1y);
 
             int uthossz = 0;
             int blockolasok = 0;
             int blockszam =0;
-            bool voltblock = false;
-             utx.push_back(m1x);
-              uty.push_back(m1y);
+
+            for (size_t i=0; i<v.size(); i++){
+                for (size_t j=0; j<v[i].size(); j++){
+                    if(v[i][j].block == true){
+                        v[i][j].block = false;
+                    }
+
+                }
+                }
+
+
 
             while(m1y != m2y || m1x != m2x){
 
              blockolasok = blockolasok +1;
-            if (m1x +1 < v[0].size() && m1x < m2x && v[m1y][m1x+1].b != false && v[m1y][m1x+1].block != true ){ //X+1
+            if (m1x +1 < v[0].size() && m1x < m2x && v[m1y][m1x+1].szigetek == szigetid && v[m1y][m1x+1].block != true ){ //X+1
+
                 m1x =  m1x+1;
 
 
@@ -460,28 +475,42 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
 
 
             }
-            else if(m1y +1< v.size() && m1y < m2y && v[m1y+1][m1x].b != false && v[m1y+1][m1x].block != true){ //Y+1
+            else if(m1y +1< v.size() && m1y < m2y && v[m1y+1][m1x].szigetek == szigetid && v[m1y+1][m1x].block != true){ //Y+1
+
                 m1y = m1y+1;
                 utx.push_back(m1x);
                 uty.push_back(m1y);
                 v[m1y][m1x].block = true;
 
             }
-            else if(m1x -1 > -1 && m1x > m2x && v[m1y][m1x-1].b != false && v[m1y][m1x-1].block != true){ //X-1
+            else if(m1x -1 > -1 && m1x > m2x && v[m1y][m1x-1].szigetek == szigetid && v[m1y][m1x-1].block != true){ //X-1
+
                 m1x = m1x-1;
                  utx.push_back(m1x);
                 uty.push_back(m1y);
-                 v[m1y][m1x].block = true;
+                v[m1y][m1x].block = true;
 
             }
-            else if(m1y-1>-1 && m1y > m2y && v[m1y-1][m1x].b != false && v[m1y-1][m1x].block != true){ //Y-1
+            else if(m1y-1>-1 && m1y > m2y && v[m1y-1][m1x].szigetek == szigetid && v[m1y-1][m1x].block != true){ //Y-1
+
                 m1y = m1y-1;
                  utx.push_back(m1x);
                 uty.push_back(m1y);
-                 v[m1y][m1x].block = true;
+                v[m1y][m1x].block = true;
 
             }
-            else if(m1x -1 > -1 && m1y-1>-1  &&v[m1y-1][m1x-1].b != false &&v[m1y-1][m1x-1].block != true){ //XY-1
+            else if(m1x +1<v[0].size() && m1y +1<v.size() && v[m1y+1][m1x+1].szigetek == szigetid && v[m1y+1][m1x+1].block != true){ //XY+1
+
+                m1x = m1x+1;
+                m1y = m1y+1;
+                utx.push_back(m1x);
+                uty.push_back(m1y);
+                v[m1y][m1x].block = true;
+
+            }
+
+            else if(m1x -1 > -1 && m1y-1>-1 &&v[m1y-1][m1x-1].szigetek == szigetid && v[m1y-1][m1x-1].block != true){ //XY-1
+
                m1x = m1x-1;
                 m1y = m1y-1;
                 utx.push_back(m1x);
@@ -489,75 +518,61 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
                 v[m1y][m1x].block = true;
 
             }
-            else if(m1x +1<v[0].size() && m1y +1<v.size()  && m1x < m2x && v[m1y+1][m1x+1].b != false && v[m1y+1][m1x+1].block != true){ //XY+1
-                m1x = m1x+1;
-                m1y = m1y+1;
-                utx.push_back(m1x);
-                uty.push_back(m1y);
-                 v[m1y][m1x].block = true;
+
+             else if(m1x +1<v[0].size() && m1y-1>-1 && v[m1y-1][m1x+1].szigetek == szigetid && v[m1y-1][m1x+1].block != true){ //X+1 Y-1
+
+            m1x = m1x+1;
+            m1y = m1y-1;
+            utx.push_back(m1x);
+            uty.push_back(m1y);
+            v[m1y][m1x].block = true;
 
             }
-            else if(m1y +1<v.size() && m1x -1 > -1   && m1x > m2x &&  v[m1y+1][m1x-1].b != false && v[m1y+1][m1x-1].block != true){ //X-1Y+1
+            else if(m1y +1<v.size() && m1x -1 > -1 && v[m1y+1][m1x-1].szigetek == szigetid && v[m1y+1][m1x-1].block != true){ //X-1Y+1
+
                 m1x = m1x-1;
                 m1y = m1y+1;
-                 utx.push_back(m1x);
+                utx.push_back(m1x);
                 uty.push_back(m1y);
                 v[m1y][m1x].block = true;
 
             }
-            else if(m1x +1<v[0].size() &&  m1y-1>-1 &&  v[m1y-1][m1x+1].b != false && v[m1y-1][m1x+1].block != true){ //X+1 Y-1
-             m1x = m1x+1;
-             m1y = m1y-1;
-              utx.push_back(m1x);
-              uty.push_back(m1y);
-              v[m1y][m1x].block = true;
 
-            }
             else{ //ha valahogy beakad
 
-
-
-                voltblock = true;
-                if(utx.size() > 0 ){
+                if(utx.size() > 1 && uty.size() > 1){
 
 
                 utx.pop_back();
                 uty.pop_back();
+                cout << utx.size() << " a vektor merete"<<endl;
+                cout << m1x << " elotte" << endl;
+                m1x = utx[utx.size()-1];
+                cout << m1x << " utana" << endl;
+                m1y = uty[uty.size()-1];
 
-                m1x = utx[0];
-                m1y = uty[0];
-                voltblock = false;
-
-                }
-
-                if( voltblock == true){
-                    cout <<uty[0] << ":" << utx[0] <<"         " << osuy << ":" << osux <<endl;
-                    v[uty[0]][utx[0]].block == false;
-                    m1x = osux;
-                    m1y = osuy;
-                    utx.clear();
-                    uty.clear();
 
 
                 }
 
-                else if(v[osuy][osux].block == true || v[osuy+1][osux+1].block == true && v[osuy-1][osux-1].block == true&& v[osuy+1][osux-1].block == true && v[osuy-1][osux+1].block == true && v[osuy+1][osux].block == true && v[osuy][osux+1].block == true && v[osuy-1][osux].block == true && v[osuy][osux-1].block == true){
-                     cout << "beblockoltam magamat" <<endl;
-                    for(size_t y = 0 ; y< v.size();y++){
-                    for(size_t x = 0; x < v[y].size();x++){
-                     v[y][x].block = false;
-                    }
-                    }
 
-                }
+
 
 
 
 
             }
 
-                gout << move_to(m1x,m1y) << color(255,0,0) << dot << refresh;
+            cout << blockolasok <<endl;
+
+
+
+                //cout << v.size() <<endl; //az y a 300;
                 cout << m1x << ":" << m1y <<"         " << m2x << ":" << m2y <<endl;
+                gout << move_to(m1x,m1y) << color(255,0,0) << dot << refresh;
+
+
+
 
 
 
