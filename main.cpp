@@ -19,11 +19,9 @@ public:
     int a; //ertekek
 
     bool b; // igaz hamis
-    bool bt; // igaz hamis
     bool block;
 
     int szigetek; //szigetek a szinezos megoldassa
-    int tengerszemek; //tengerszemek a szinezos megoldassa
 
 
 
@@ -98,10 +96,6 @@ bool sziget(int ex, int ey)
     {
         return v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b ||
          v[(ex+1) % v.size()][(ey+1) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey-1+v[ex].size()) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey+1) % v[ex].size()].b || v[(ex+1) % v.size()][(ey-1+v[ex].size())% v[ex].size()].b;
-    }
-bool tszem(int ex, int ey)
-    {
-        return v[(ex+1) % v.size()][ey].bt || v[(ex-1+v.size()) % v.size()][ey].bt || v[ex][(ey+1) % v[ex].size()].bt || v[ex][(ey-1+v[ex].size()) % v[ex].size()].bt;
     }
 
     void szigetkereso(int ex, int ey)
@@ -212,113 +206,16 @@ bool tszem(int ex, int ey)
             */
         }
 
-        //szigetkereses
-
-        if (v[ex][ey].a <= 0 && v[ex][ey].bt == false ){
-            v[ex][ey].bt = true;
-            do
-            {
-                valtozott = false;
-
-                for (size_t i=0; i<v.size(); i++)
-                {
-                    for (size_t j=0; j<v[i].size(); j++)
-                    {
-                        if (v[i][j].a <= 0 and
-                            tszem(i, j) and
-                            !v[i][j].bt)
-                        {
-                            v[i][j].bt = true;
-                            valtozott = true;
-                        }
-                    }
-                }
-                for (size_t i=0; i<v.size(); i++)
-                {
-                    for (int j=v[i].size()-1; j>=0; j--)
-                    {
-                        if (v[i][j].a <= 0 and
-                            tszem(i, j) and
-                            !v[i][j].bt)
-                        {
-                            v[i][j].bt = true;
-                            valtozott = true;
-                        }
-                    }
-                }
-                for (int i=v.size()-1; i>=0; i--)
-                {
-                    for (size_t j=0; j<v[i].size(); j++)
-                    {
-                        if (v[i][j].a <= 0 and
-                            tszem(i, j) and
-                            !v[i][j].bt)
-                        {
-                            v[i][j].bt = true;
-                            valtozott = true;
-                        }
-                    }
-                }
-                for (int i=v.size()-1; i>=0; i--)
-                {
-                    for (int j=v[i].size()-1; j>=0; j--)
-                    {
-                        if (v[i][j].a <= 0 and
-                            tszem(i, j) and
-                            !v[i][j].bt)
-                        {
-                            v[i][j].bt = true;
-                            valtozott = true;
-                        }
-                    }
-                }
-
-            }
-            while (valtozott);
-
-
-                /*
-            for (size_t i=0; i<sz.size(); i++){
-                    for (size_t j=0; j<sz[i].size(); j++){
-                        cout << szines[i][j] << "    ";
-                    }
-                    }
-                */
-
-            //itt mar beszinezi jol
-                tszam = tszam + 1;
-                //cout << tszam <<endl;
-               for (size_t i=0; i<v.size(); i++){
-                    for (size_t j=0; j<v[i].size(); j++){
-                        v[i][j].tengerszemek = v[i][j].tengerszemek + v[i][j].bt;
-
-
-                        //cout << v[i][j].szigetek <<"  ";
-
-
-                    }
-                }
-
-
-        /*
-        for (size_t i=0; i<sz.size(); i++){
-                    for (size_t j=0; j<sz[i].size(); j++){
-                        cout << szines[i][j] <<" ";
-                    }
-        }
-        cout << "egylefutas" <<endl;
-            */
-        }
-        //cout << "tefutott" <<endl;
-
-
-
 
 }
 
 
 
+void xrajz(int ex,int ey){
 
+gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(-5,-5) << move_to(ex,ey) << line(-5,5) << move_to(ex,ey) << line(5,-5);
+
+}
 
 
 //rajz
@@ -330,13 +227,7 @@ for(size_t y = 0 ; y< v.size();y++){
 
 
 
-        if (v[y][x].bt){
-             gout << move_to(x,y) << color(0, 0, v[y][x].tengerszemek+100) << dot;
-
-
-        }
-
-        else if(v[y][x].a <= 0){
+        if(v[y][x].a <= 0){
 
             gout << move_to(x,y) << color(0,200,255) << dot;
         }
@@ -373,7 +264,7 @@ for(size_t y = 0 ; y< v.size();y++){
 
         }
 
-        //árnykék aszerint, hogy magasság mennyi körülötte, ill melyik oldalról süt a nap
+        //ï¿½rnykï¿½k aszerint, hogy magassï¿½g mennyi kï¿½rï¿½lï¿½tte, ill melyik oldalrï¿½l sï¿½t a nap
 
 
     }
@@ -387,18 +278,6 @@ for(size_t y = 0 ; y< v.size();y++){
 
 
 //rajzmagassag
-void rajzM(int ex, int ey){
-
-
-for(size_t y = 0 ; y< v.size();y++){
-for(size_t x = 0; x < v[y].size();x++){
-
-//v [magassag][szelesseg]
-gout << move_to(AblakSz()+x,v[ey][x].a + AblakM()/2) << color(0,200,255) << dot;
-}
-}
-}
-//rajzmagassag
 
 
 //ablak
@@ -409,12 +288,6 @@ int AblakM(){
 return magassag;
 }
 //ablak
-
-void xrajz(int ex,int ey){
-
-gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(-5,-5) << move_to(ex,ey) << line(-5,5) << move_to(ex,ey) << line(5,-5);
-
-}
 
 
 void utkereso(int m1x, int m1y, int m2x, int m2y){
@@ -624,10 +497,7 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
     //megkeresi a szigeteket
 
-    bool melymagas = false;
-    bool utkereses = false;
-    bool vizonto = false;
-    bool hibepito = false;
+
 
     int kattintasszam = 0;
 
@@ -653,38 +523,10 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
 
 
-    if(ev.type == ev_key){
-        if(ev.keycode == 'u'){
-
-            kattintasszam = 0;
-                mark1x =0;
-                mark1y =0;
-                mark2x =0;
-                mark2y =0;
-            //cout << "this is the way" <<endl;
-            utkereses = true;
-            cout << "Utkereses aktiv nyomj egy jobbklicket az idnitashoz" <<endl;
-        }
-
-        if(ev.keycode == 'v'){
-
-            kattintasszam = 0;
-                mark1x =0;
-                mark1y =0;
-                mark2x =0;
-                mark2y =0;
-            //cout << "this is the way" <<endl;
-            vizonto = true;
-            cout << "Vizonto bekapcsolva kattints vizre" <<endl;
-        }
-
-
-    }
-
     //1 feladat ut
     if(ev.type == ev_mouse){
 
-        if(ev.button == btn_left && utkereses){
+        if(ev.button == btn_left){
 
             kattintasszam = kattintasszam + 1;
 
@@ -712,45 +554,8 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
         }
 
-        //2 feladat vizonto
-        if(ev.button == btn_left && vizonto){
-
-            kattintasszam = kattintasszam + 1;
-
-            if(kattintasszam == 1){
-            mark1x = ev.pos_x;
-            mark1y = ev.pos_y;
-
-            }
-
-            if(kattintasszam == 2){
-
-                mark2x = ev.pos_x;
-                mark2y = ev.pos_y;
-
-                kattintasszam = 0;
-                mark1x =0;
-                mark1y =0;
-                mark2x =0;
-                mark2y =0;
-
-
-            }
-
-
-
-        }
-
-
-
 
     }
-
-
-
-
-
-
 
 
 
