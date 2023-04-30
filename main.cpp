@@ -98,6 +98,8 @@ bool sziget(int ex, int ey)
         //ey == 400
          //v.size() == 300
 
+
+
         return (v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b ||
          v[(ex+1) % v.size()][(ey+1) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey-1+v[ex].size()) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey+1) % v[ex].size()].b || v[(ex+1) % v.size()][(ey-1+v[0].size())% v[0].size()].b); //es az nem sziget ami a tul oldalon van
     }
@@ -118,7 +120,7 @@ bool sziget(int ex, int ey)
                 for (size_t i=0; i<v.size(); i++)
                 {
                     for (size_t j=0; j<v[i].size(); j++){
-                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b){
+                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b && i < v.size()-1 && i > 0 && j < v[0].size()-1 && j > 0 ){
                             v[i][j].b = true;
                             valtozott = true;
                         }
@@ -127,7 +129,7 @@ bool sziget(int ex, int ey)
                 for (size_t i=0; i<v.size(); i++)
                 {
                     for (int j=v[i].size()-1; j>=0; j--){
-                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b){
+                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b&& i < v.size()-1 && i > 0 && j < v[0].size()-1 && j > 0 ){
                             v[i][j].b = true;
                             valtozott = true;
                         }
@@ -137,7 +139,7 @@ bool sziget(int ex, int ey)
                 for (int i=v.size()-1; i>=0; i--)
                 {
                     for (size_t j=0; j<v[i].size(); j++){
-                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b){
+                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b&& i < v.size()-1 && i > 0 && j < v[0].size()-1 && j > 0 ){
                             v[i][j].b = true;
                             valtozott = true;
                         }
@@ -147,7 +149,7 @@ bool sziget(int ex, int ey)
                 for (int i=v.size()-1; i>=0; i--)
                 {
                     for (int j=v[i].size()-1; j>=0; j--){
-                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b){
+                        if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b&& i < v.size()-1 && i > 0 && j < v[0].size()-1 && j > 0 ){
                             v[i][j].b = true;
                             valtozott = true;
                         }
@@ -169,7 +171,7 @@ bool sziget(int ex, int ey)
 
                         if(v[i][j].szigetek > 146){
                             //cout << v[i][j].szigetek <<"  ";
-                            cout << szszam <<"  " << v[i][j].b*szszam <<endl;
+                            //cout << szszam <<"  " << v[i][j].b*szszam <<endl;
                         }
 
                         //cout << v[i][j].szigetek <<"  ";
@@ -207,34 +209,8 @@ for(size_t y = 0 ; y< v.size();y++){
         }
 
         if (v[y][x].b){
-             gout << move_to(x,y) << color(v[y][x].szigetek*100, v[y][x].szigetek+100, 0) << dot;
-             //cout << v[y][x].szigetek <<endl;
-
-        }
-
-        else if(v[y][x].a > 0){
-
-            int pillmagassag = v[y][x].a;
-
-            if(pillmagassag < voltmagassag){
-
-
-                    gout << move_to(x,y) << color(200,100-100+pillmagassag,0) << dot;
-
-
-
-
-
-            }
-            if(pillmagassag > voltmagassag){
-
-
-                    gout << move_to(x,y) << color(200,100+100+pillmagassag,0) << dot;
-
-
-            }
-
-         voltmagassag = pillmagassag;
+              gout << move_to(x,y) << color(v[y][x].szigetek*100,100+v[y][x].a, 0) << dot; //200,100+magassag,0
+              //gout << move_to(x,y) << color(v[y][x].szigetek*100, v[y][x].szigetek+100, 0) << dot;
 
         }
 
@@ -412,14 +388,6 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
 
             }
 
-            //cout << blockolasok <<endl;
-
-
-
-                //cout << v.size() <<endl; //az y a 300;
-                //cout << m1x << ":" << m1y <<"         " << m2x << ":" << m2y <<endl;
-                //gout << move_to(m1x,m1y) << color(255,0,0) << dot << refresh;
-
 
 
 
@@ -439,14 +407,11 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
 
         for (size_t i=0; i< utx.size(); i++){
 
-        if(rajzutx.size() > 0 && utx[i+1] < utx.size() && utx[0] < utx[utx.size()-1] && uty[0] < uty[uty.size()-1] && utx[i]+uty[i] > utx[i+1]+uty[i+1]){
+        if(rajzutx.size() > 0 && utx[i-1] > utx.size() && sqrt((utx[utx.size()-1] - utx[i-1])^2 +(uty[uty.size()-1] -uty[i-1])^2)+1 == sqrt((utx[utx.size()-1] - utx[i])^2 +(uty[uty.size()-1] -uty[i])^2)){
 
 
         }
-        else if(rajzutx.size() > 0 && utx[i+1] < utx.size() && utx[0] > utx[utx.size()-1] && uty[0] > uty[uty.size()-1] && utx[i]+uty[i] < utx[i+1]+uty[i+1]){
 
-
-        }
         else{
             rajzutx.push_back(utx[i]);
             rajzuty.push_back(uty[i]);
@@ -455,6 +420,8 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
 
 
         }
+
+        cout << "Az ut hossza: " << rajzutx.size()-1 <<endl;
 
 
         }
