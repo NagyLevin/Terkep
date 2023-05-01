@@ -39,7 +39,7 @@ int szszam = 0; //szigetek szama
 
 vector<int> rajzutx; vector<int> rajzuty;
 
-int elozox;
+
 public:
 
 vector<vector<Ertek>> v;
@@ -248,14 +248,14 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
         if(v[m1y][m1x].szigetek == 0 || v[m2y][m2x].szigetek== 0){
 
             //cout << "eger koordinatok  " << m1x << ":" << m1y << "     " << m2x <<":" << m2y <<endl;
-            cout << "ez egyik pont vizben van " <<endl;//<< v[m1y][m1x].a << "  " << v[m2y][m2x].a<<endl;
+            cout << "Az egyik pont vizben van!" <<endl;//<< v[m1y][m1x].a << "  " << v[m2y][m2x].a<<endl;
 
         }
 
         else if(v[m1y][m1x].szigetek !=  v[m2y][m2x].szigetek){
 
 
-            cout << "nincs ut a ket pont kozott" <<endl;
+            cout << "Nincs ut a ket pont kozott!" <<endl;
 
         }
 
