@@ -35,7 +35,7 @@ int szelesseg,magassag;
 
 string _fajlnev;
 int szszam = 0; //szigetek szama
-int tszam = 0;
+
 
 vector<int> rajzutx; vector<int> rajzuty;
 
@@ -101,7 +101,7 @@ bool sziget(int ex, int ey)
 
 
         return (v[(ex+1) % v.size()][ey].b || v[(ex-1+v.size()) % v.size()][ey].b || v[ex][(ey+1) % v[ex].size()].b || v[ex][(ey-1+v[ex].size()) % v[ex].size()].b ||
-         v[(ex+1) % v.size()][(ey+1) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey-1+v[ex].size()) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey+1) % v[ex].size()].b || v[(ex+1) % v.size()][(ey-1+v[0].size())% v[0].size()].b); //es az nem sziget ami a tul oldalon van
+         v[(ex+1) % v.size()][(ey+1) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey-1+v[ex].size()) % v[ex].size()].b || v[(ex-1+v.size()) % v.size()][(ey+1) % v[ex].size()].b || v[(ex+1) % v.size()][(ey-1+v[0].size())% v[0].size()].b);
     }
 
 
@@ -150,7 +150,7 @@ bool sziget(int ex, int ey)
                 {
                     for (int j=v[i].size()-1; j>=0; j--){
                         if (v[i][j].a >= 0 && sziget(i, j) && !v[i][j].b&& i < v.size()-1 && i > 0 && j < v[0].size()-1 && j > 0 ){
-                            v[i][j].b = true;
+                            v[i][j].b = true;                                                 //ne legyenek terekep szelen atnyulo szigetek
                             valtozott = true;
                         }
                     }
@@ -169,10 +169,10 @@ bool sziget(int ex, int ey)
                         v[i][j].szigetek = v[i][j].szigetek + v[i][j].b;
 
 
-                        if(v[i][j].szigetek > 146){
+                        //if(v[i][j].szigetek > 146){
                             //cout << v[i][j].szigetek <<"  ";
                             //cout << szszam <<"  " << v[i][j].b*szszam <<endl;
-                        }
+                        //}
 
                         //cout << v[i][j].szigetek <<"  ";
 
@@ -196,7 +196,7 @@ gout << move_to(ex,ey) << color(255,0,0) << line(5,5) << move_to(ex,ey) << line(
 
 //rajz
 void rajz(){
-int voltmagassag = 0;
+
 
 for(size_t y = 0 ; y< v.size();y++){
     for(size_t x = 0; x < v[y].size();x++){
@@ -240,12 +240,15 @@ return magassag;
 //ablak
 
 
+
+
+
 void utkereso(int m1x, int m1y, int m2x, int m2y){
 
         if(v[m1y][m1x].szigetek == 0 || v[m2y][m2x].szigetek== 0){
 
             //cout << "eger koordinatok  " << m1x << ":" << m1y << "     " << m2x <<":" << m2y <<endl;
-            cout << "ez egyik pont vizben van " << v[m1y][m1x].a << "  " << v[m2y][m2x].a<<endl;
+            cout << "ez egyik pont vizben van " <<endl;//<< v[m1y][m1x].a << "  " << v[m2y][m2x].a<<endl;
 
         }
 
@@ -412,6 +415,8 @@ void utkereso(int m1x, int m1y, int m2x, int m2y){
 
         }
 
+
+
         else{
             rajzutx.push_back(utx[i]);
             rajzuty.push_back(uty[i]);
@@ -469,7 +474,7 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
     kep.olvas();
 
 
-    //megkeresi a szigeteket
+
 
 
 
@@ -479,7 +484,9 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
     gout.open(kep.AblakSz(),kep.AblakM());
 
-     kep.Reset(); //terkep elso beolvasasa
+    kep.Reset(); //terkep elso beolvasasa
+    cout << "Jeloljon meg 2 pontot az utkereseshez" <<endl;
+
 
     gin.timer(30);
     while(gin >> ev && ev.keycode != key_escape){
@@ -498,7 +505,7 @@ int main()      //mainnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 
 
 
-    //1 feladat ut
+
     if(ev.type == ev_mouse){
 
         if(ev.button == btn_left){
